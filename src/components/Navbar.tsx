@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import type { NavigationItem } from '../types';
 
+interface NavbarProps {
+  searchTerm?: string;
+  onSearchChange?: (value: string) => void;
+}
+
 const navItems: NavigationItem[] = [
   { name: 'Discover', href: '#' },
   { name: 'Trending', href: '#' },
@@ -8,7 +13,7 @@ const navItems: NavigationItem[] = [
   { name: 'Genres', href: '#' },
 ];
 
-export const Navbar = () => {
+export const Navbar = ({ searchTerm = '', onSearchChange }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -51,11 +56,23 @@ export const Navbar = () => {
             </span>
             <input
               type="text"
-              readOnly
+              value={searchTerm}
+              onChange={(e) => onSearchChange?.(e.target.value)}
               placeholder="Search movies, shows..."
               className="search-box-input"
             />
-            <span className="search-shortcut-badge">⌘K</span>
+            {searchTerm ? (
+              <button
+                type="button"
+                onClick={() => onSearchChange?.('')}
+                className="search-clear-btn"
+                aria-label="Clear search"
+              >
+                ×
+              </button>
+            ) : (
+              <span className="search-shortcut-badge">⌘K</span>
+            )}
           </div>
 
           <button type="button" className="btn-action">
@@ -86,6 +103,16 @@ export const Navbar = () => {
 
       {isMobileMenuOpen && (
         <div className="mobile-menu-drawer">
+          <div className="mobile-search-box">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => onSearchChange?.(e.target.value)}
+              placeholder="Search movies, shows..."
+              className="search-box-input"
+              style={{ width: '100%' }}
+            />
+          </div>
           <nav aria-label="Mobile Navigation">
             {navItems.map((item) => (
               <a key={item.name} href={item.href} onClick={() => setIsMobileMenuOpen(false)}>
