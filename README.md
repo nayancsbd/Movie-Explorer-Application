@@ -1,34 +1,40 @@
-# React + TypeScript + Vite
+# 🎬 Movie Explorer Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A responsive web application built with React and TypeScript that allows users to discover movies and TV shows, perform real-time search with debounced queries, and inspect detailed information in an interactive modal.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Features
 
-## React Compiler
+- **Home Landing Page**: Cinematic hero banner with direct navigation to the movie catalog and a trending spotlight section.
+- **Dedicated Movie Listing**: Browse popular titles and search shows dynamically by title.
+- **Real-Time Search**: Debounced search input querying the TVMaze API to minimize unnecessary network calls.
+- **Interactive Details Modal**: Pop-up modal displaying backdrop artwork, ratings, release date, genre tags, runtime, network, and clean synopsis overview.
+- **Responsive Layout**: Fluid CSS Grid and Flexbox layouts optimized for mobile, tablet, and desktop screens.
+- **Graceful States**: Animated skeleton loaders during fetching, error handling with retry, and friendly empty states.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the Oxlint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+- **Frontend:** React 19, TypeScript
+- **Routing:** React Router v7
+- **Styling:** Tailwind CSS v4
+- **Build Tool:** Vite
+- **Data Source:** [TVMaze API](https://www.tvmaze.com/api)
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+---
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## 🌐 API Endpoints
 
+- **Fetch Shows:** `GET https://api.tvmaze.com/shows`
+- **Search Shows:** `GET https://api.tvmaze.com/search/shows?q=:query`
 
+---
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+## live link: 
+https://vercel.com/nayan-b34c/movie-explorer-application
