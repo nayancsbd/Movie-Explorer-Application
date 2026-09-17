@@ -2,47 +2,80 @@ import type { ApiResponse, Movie } from '../types';
 
 export const API_BASE_URL = 'https://api.tvmaze.com';
 
-interface TvMazeShowRaw {
+export interface TvMazeShowRaw {
   id: number;
   name: string;
   premiered?: string;
+  ended?: string;
+  runtime?: number | null;
+  averageRuntime?: number | null;
+  language?: string;
+  status?: string;
+  officialSite?: string | null;
+  network?: {
+    name?: string;
+    country?: { name?: string; code?: string; timezone?: string };
+  } | null;
+  webChannel?: {
+    name?: string;
+    country?: { name?: string; code?: string; timezone?: string } | null;
+  } | null;
+  externals?: {
+    imdb?: string | null;
+  };
   image?: {
     medium?: string;
     original?: string;
   } | null;
   rating?: {
-    average?: number;
+    average?: number | null;
   };
   genres?: string[];
-  summary?: string;
+  summary?: string | null;
 }
 
-interface TvMazeSearchItemRaw {
+export interface TvMazeSearchItemRaw {
   score: number;
   show: TvMazeShowRaw;
 }
 
-const formatShowToMovie = (show: TvMazeShowRaw): Movie => {
+export const formatShowToMovie = (show: TvMazeShowRaw): Movie => {
   const poster = show.image?.original || show.image?.medium || '';
+  const backdropUrl = show.image?.original || show.image?.medium || '';
   const year = show.premiered ? show.premiered.split('-')[0] : 'N/A';
-  const overview = show.summary ? show.summary.replace(/<[^>]*>/g, '').trim() : '';
+  const overview = show.summary
+    ? show.summary.replace(/<[^>]*>/g, '').trim()
+    : 'No summary available for this title.';
+
+  const networkName = show.network?.name || show.webChannel?.name || 'Unknown Network';
 
   return {
     id: show.id,
     title: show.name,
     poster,
-    year,
-    rating: show.rating?.average ?? 'N/A',
-    genres: show.genres || [],
-    overview,
     posterUrl: poster,
+    backdropUrl,
+    year,
     releaseYear: year,
+    rating: show.rating?.average !== null && show.rating?.average !== undefined
+      ? show.rating.average
+      : 'N/A',
+    genres: show.genres && show.genres.length > 0 ? show.genres : ['Drama'],
+    overview,
+    summary: show.summary || undefined,
+    runtime: show.runtime || show.averageRuntime || 'N/A',
+    language: show.language || 'English',
+    status: show.status || 'Released',
+    premiered: show.premiered || 'N/A',
+    officialSite: show.officialSite || undefined,
+    network: networkName,
+    imdbId: show.externals?.imdb || undefined,
   };
 };
 
 export const getTrendingMovies = async (): Promise<ApiResponse<Movie[]>> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/shows?page=0`);
+    const response = await fetch(`${API_BASE_URL}/shows`);
     if (!response.ok) {
       return {
         data: [],
@@ -54,7 +87,7 @@ export const getTrendingMovies = async (): Promise<ApiResponse<Movie[]>> => {
     }
 
     const rawShows: TvMazeShowRaw[] = await response.json();
-    const movies = rawShows.slice(0, 30).map(formatShowToMovie);
+    const movies = rawShows.slice(0, 50).map(formatShowToMovie);
 
     return {
       data: movies,
@@ -108,6 +141,19 @@ export const searchMovies = async (query: string): Promise<ApiResponse<Movie[]>>
       message: error instanceof Error ? error.message : 'Unknown network error',
       total: 0,
     };
+  }
+};
+
+export const getShowById = async (id: number | string): Promise<Movie | null> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/shows/${id}`);
+    if (!response.ok) {
+      return null;
+    }
+    const rawShow: TvMazeShowRaw = await response.json();
+    return formatShowToMovie(rawShow);
+  } catch {
+    return null;
   }
 };
 

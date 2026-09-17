@@ -2,12 +2,21 @@ export interface Movie {
   id: number | string;
   title: string;
   poster: string;
+  posterUrl?: string;
+  backdropUrl?: string;
   year: string | number;
+  releaseYear?: string | number;
   rating?: number | string;
   genres?: string[];
   overview?: string;
-  posterUrl?: string;
-  releaseYear?: string | number;
+  summary?: string;
+  runtime?: number | string;
+  language?: string;
+  status?: string;
+  premiered?: string;
+  officialSite?: string;
+  network?: string;
+  imdbId?: string;
 }
 
 export interface ApiResponse<T = Movie[]> {
