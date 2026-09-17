@@ -37,4 +37,4 @@ A responsive web application built with React and TypeScript that allows users t
 This project is open source and available under the MIT License.
 
 ## live link: 
-https://vercel.com/nayan-b34c/movie-explorer-application
+https://movie-explorer-application-phi.vercel.app
